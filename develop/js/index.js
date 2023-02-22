@@ -30,8 +30,16 @@ function init() {
 			viewAllDepartments();
 		} else if (choice === 'Add Department') {
 			addDepartment();
+		} else if (choice === 'View All Employees') {
+			viewAllEmployees();
 		} else return console.log('Done.');
 	});
+}
+
+function viewAllEmployees() {
+	console.log('view all employees');
+
+	// select employee.id, first_name, last_name, title, salary from employee, roles where employee.role_id = roles.id
 }
 
 function addEmployee() {
@@ -131,8 +139,16 @@ function updateEmployeeRole() {
 
 //function to VIEW roles table
 function viewAllRoles() {
-	console.log('All Roles');
-	init();
+	db.query('SELECT * FROM roles', function (error, results) {
+		if (error) {
+			console.log(error);
+		} else {
+			//initializes list of choices
+			const table = cTable.getTable(results);
+			console.log(table);
+			init();
+		}
+	});
 }
 
 //function to ADD ROLE to roles table
@@ -196,8 +212,16 @@ function addRole() {
 
 //function to VIEW department table
 function viewAllDepartments() {
-	console.log('All Depts');
-	init();
+	db.query('SELECT * FROM department', function (error, results) {
+		if (error) {
+			console.log(error);
+		} else {
+			//initializes list of choices
+			const table = cTable.getTable(results);
+			console.log(table);
+			init();
+		}
+	});
 }
 
 //function to add to department table
