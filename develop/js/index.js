@@ -15,6 +15,7 @@ const db = mysql.createConnection(
 	console.log(`Connected to the employees_db database.`)
 );
 
+//will act as the main menu of this application
 function init() {
 	inquirer.prompt(questions.startQ).then((startQ) => {
 		let choice = startQ.choice;
@@ -37,9 +38,32 @@ function init() {
 }
 
 function viewAllEmployees() {
-	console.log('view all employees');
-
-	// select employee.id, first_name, last_name, title, salary from employee, roles where employee.role_id = roles.id
+	db.query(
+		`select first_name, last_name, title, department_name, salary
+	from employee, roles, department
+	where employee.role_id = roles.id and roles.id = department.id`,
+		function (error, results) {
+			if (error) {
+				console.log(error);
+			} else {
+				db.query(
+					`select b.first_name as Manager
+					from employee a, employee b
+					where b.manager_id = a.id
+					order by a.id;`,
+					function (error, results2) {
+						if (error) {
+							console.log(error);
+						} else {
+							const table = cTable.getTable(results);
+							console.log(table);
+							init();
+						}
+					}
+				);
+			}
+		}
+	);
 }
 
 function addEmployee() {
@@ -118,11 +142,14 @@ function addEmployee() {
 										function (error) {
 											if (error) {
 												console.log(error);
-											} else console.log('New Employee Added');
+											} else {
+												//lets user know employee was added succesfully and goes back to main menu
+												console.log('New Employee Added');
+												init();
+											}
 										}
 									);
 									//reverts back to start prompts
-									init();
 								});
 						}
 					});
@@ -133,8 +160,80 @@ function addEmployee() {
 
 //function to UPDATE an employee role
 function updateEmployeeRole() {
-	console.log('update employee role');
-	init();
+	db.query('SELECT * FROM employee', function (error, results) {
+		if (error) {
+			console.log(error);
+		} else {
+			//initializes list of choices
+			let choices = [];
+
+			//creates the list of choices for inquirer to use
+			for (let i = 0; i < results.length; i++) {
+				choices.push(results[i].first_name);
+			}
+
+			//prompt for updating certain employee
+			inquirer
+				.prompt([
+					{
+						type: 'list',
+						name: 'empChoice',
+						message: `Which employee's role do you want to update?`,
+						choices: choices,
+					},
+				])
+				.then(function (employee) {
+					//will get the employee object that was chosen
+					const emp1 = results.find(
+						(emp) => emp.first_name === employee.empChoice
+					);
+
+					//query to get all role objects
+					db.query('SELECT * FROM roles', function (error, roles) {
+						if (error) {
+							console.log(error);
+						} else {
+							//new array for role title choices
+							let rChoices = [];
+							for (let i = 0; i < roles.length; i++) {
+								rChoices.push(roles[i].title);
+							}
+
+							//prompt to select role to update to
+							inquirer
+								.prompt([
+									{
+										type: 'list',
+										name: 'roleChoice',
+										message: `Which role do you want to assign the selected employee?`,
+										choices: rChoices,
+									},
+								])
+								.then(function (role) {
+									const updRole = roles.find(
+										(objRoles) => objRoles.title === role.roleChoice
+									);
+
+									//query to update role_id of selected employee.id
+									db.query(
+										`UPDATE employee
+									SET role_id = ${updRole.id}
+									WHERE employee.id = ${emp1.id};`,
+										function (error, results) {
+											if (error) {
+												console.log(error);
+											} else {
+												console.log('Employee Role Updated!');
+												init();
+											}
+										}
+									);
+								});
+						}
+					});
+				});
+		}
+	});
 }
 
 //function to VIEW roles table
@@ -143,7 +242,7 @@ function viewAllRoles() {
 		if (error) {
 			console.log(error);
 		} else {
-			//initializes list of choices
+			//initializes table of results
 			const table = cTable.getTable(results);
 			console.log(table);
 			init();
@@ -199,7 +298,11 @@ function addRole() {
 						function (error) {
 							if (error) {
 								console.log(error);
-							} else console.log('New Role Added');
+							} else {
+								//lets user know new role was added successfully
+								console.log('New Role Added');
+								init();
+							}
 						}
 					);
 
@@ -243,13 +346,15 @@ function addDepartment() {
 				function (error) {
 					if (error) {
 						console.log(error);
-					} else console.log('New Department Added');
+					} else {
+						//lets user know new department was added successfully
+						console.log('New Department Added');
+						init();
+					}
 				}
 			);
-
-			//back to the main prompt
-			init();
 		});
 }
 
+//initializes application
 init();
