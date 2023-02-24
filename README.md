@@ -35,6 +35,7 @@ N/A
 ![alt Preview of application](./develop/assets/images/preview1.JPG)
 ![alt Preview of application](./develop/assets/images/preview2.JPG)
 ![alt Preview of application](./develop/assets/images/preview3.JPG)
+
 A video demo of the application can be found on the following link [here.](https://drive.google.com/file/d/1juA3aD5MedVRveKHThEQXrZyq5EPh0Dy/view)
 
 <a name="installation"/>
