@@ -70,7 +70,9 @@ The GitHub Repository can be found on the following this link [here.](https://gi
 
 GitHub: aguilarj5
 Inquirer Documentation link: https://www.npmjs.com/package/inquirer
+
 mySQL2 Documentaion link: https://www.npmjs.com/package/mysql2#first-query
+
 Console Table Documentation: https://www.npmjs.com/package/console.table
 
 <a name="license"/>
