@@ -17,37 +17,6 @@ const startQ = [
 	},
 ];
 
-//prompts when adding new employee
-const employeeQ = [
-	{
-		type: 'input',
-		message: `First Name:`,
-		name: 'firstName',
-	},
-	{
-		type: 'input',
-		message: 'Last Name:',
-		name: 'lastName',
-	},
-	{
-		type: 'list',
-		name: 'role',
-		message: 'Employee Role',
-		choices: ['Salesperson', 'Accountant', 'Reception'],
-	},
-	{
-		type: 'list',
-		name: 'manager',
-		message: 'Manager',
-		choices: ['Leslie', 'Christopher', 'Marcus'],
-	},
-];
-
-//TODO: add department Qs
-//
-//TODO: add role Qs
-//TODO: update employee role Qs
-
 const checkComplete = [
 	{
 		type: 'list',
@@ -58,7 +27,6 @@ const checkComplete = [
 ];
 
 module.exports = {
-	employeeQ,
 	startQ,
 	checkComplete,
 };

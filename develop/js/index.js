@@ -305,9 +305,6 @@ function addRole() {
 							}
 						}
 					);
-
-					//back to the main propmt
-					init();
 				});
 		}
 	});
